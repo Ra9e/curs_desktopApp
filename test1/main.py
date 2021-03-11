@@ -7,7 +7,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
 from ui_t import Ui_MainWindow              #   Для работы с графическим интерфейсом
 
-
+#
 class Notifier(QtWidgets.QMainWindow):
     def __init__(self):
         super(Notifier, self).__init__()    #   Возвращает объект родителя noptyfier и возвращает его конструктор
