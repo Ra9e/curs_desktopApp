@@ -5,9 +5,12 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon
-from ui_t import Ui_MainWindow              # Для работы с графическим интерфейсом
+from ui import Ui_MainWindow                # Для работы с графическим интерфейсом
+
+from plyer import notification              # Для работы с уведомлениями
+
 import time                                 # Для работы с временем
-from plyer import notification        # Для работы с уведомлениями
+import datetime
 
 
 class Notifier(QtWidgets.QMainWindow):
@@ -21,18 +24,35 @@ class Notifier(QtWidgets.QMainWindow):
         self.setWindowTitle('NotifyME')
         self.setWindowIcon(QIcon('../загружено.png'))
         self.ui.plainTextEdit.setPlaceholderText('for example: take your pills')
+        self.ui.line_edit.setPlaceholderText('format: 16:35')
         self.ui.pushButton.clicked.connect(self.alert_func)
+        #self.ui.plainTextEdit.setMinimumHeight(11)
 
     def alert_func(self):                    # Функция для обработки сообщений и вывода уведомления
-        input_message = self.ui.plainTextEdit.toPlainText()
-        input_time = self.ui.timeEdit.text()
 
-        notification.notify(                 # Устанавливаем заголовок, текст и картинку уведомлению
-            title='NotifyMe',                # Название уведомления
-            message=input_message,           # Текст
-            app_icon='C:\\Users\\guttl\\Desktop\\curs\\загружено1.ico',     # Картинка в формате ico
-            timeout=10,                      # Время закрепления уведомления
-        )
+        if self.ui.plainTextEdit.toPlainText():                     # Проверка, если строка пустая
+            input_message = self.ui.plainTextEdit.toPlainText()
+        else:
+            input_message = 'Default Reminder'                      # то выводим соообщение по умолчанию
+
+        input_time = self.ui.line_edit.text()
+        time_obj = datetime.datetime.strptime(input_time, '%H:%M')
+
+        while True:                                     # Сравниваем введенное время с текущим
+            current_time = time.strftime("%H:%M:%S")
+            print(current_time)
+            if current_time == str(time_obj.time()):    # совпало - выводим уведомление
+                notification.notify(                                             # Устанавливаем заголовок, текст и картинку уведомлению
+                    title='NotifyMe',                                            # Название уведомления
+                    message=input_message,                                       # Текст
+                    app_icon='C:\\Users\\guttl\\Desktop\\curs\\загружено1.ico',  # Картинка в формате ico
+                    timeout=10,                                                  # Время закрепления уведомления
+                    app_name='NotifyMe',
+                    )
+                break
+            else:
+                pass
+            time.sleep(1)
 
 
 app = QtWidgets.QApplication([])            # Создаем экземпляр класса QApplication
