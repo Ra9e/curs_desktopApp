@@ -7,7 +7,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QIntValidator
 from PyQt5.QtCore import QTimer
 from ui1 import Ui_MainWindow  # Для работы с графическим интерфейсом
-from PyQt5.QtWidgets import  QSystemTrayIcon, QMenu, QAction
+from PyQt5.QtWidgets import QSystemTrayIcon, QMenu, QAction, QMessageBox
 
 from plyer import notification  # Для работы с уведомлениями
 
@@ -28,14 +28,15 @@ class Notifier(QtWidgets.QMainWindow):
         self.ui.plainTextEdit.setPlaceholderText('for example: take your pills')    # Указываем пример текста
         self.ui.line_edit.setPlaceholderText('H')       # Указываем что здесь будут часы
         self.ui.line_edit_2.setPlaceholderText('M')     # Указываем что здесь будут минуты
-        self.ui.pushButton.clicked.connect(self.alert_func)     # Подключаем кнопку к функции
         self.setFixedSize(449, 629)     # Устанавливаем неизменяемый размер окна
+
+        self.ui.pushButton.clicked.connect(self.alert_func)  # Подключаем кнопку к функции
 
         # Делаем валидатор для времени, чтобы принимались только числа в определенном промежутке
         int_validator_hours = QIntValidator(self)
         int_validator_minutes = QIntValidator(self)
         int_validator_hours.setRange(0, 23)
-        int_validator_minutes.setRange(0, 60)
+        int_validator_minutes.setRange(0, 59)
         self.ui.line_edit.setValidator(int_validator_hours)
         self.ui.line_edit_2.setValidator(int_validator_minutes)
 
@@ -91,7 +92,7 @@ class Notifier(QtWidgets.QMainWindow):
             self.timer.timeout.connect(lambda: self.timer_loop(time_obj, input_message))
             self.timer.start(1000)
         except:
-            pass
+            QMessageBox.critical(self, "Error ", "Вводить только числа от 0 до 23 для часов, и от 0 до 59 для минут", QMessageBox.Ok)
 
 
 app = QtWidgets.QApplication([])  # Создаем экземпляр класса QApplication
