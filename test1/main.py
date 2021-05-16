@@ -1,7 +1,3 @@
-#   У меня есть 2 файла ui_t and ui, различия между ними только в том, как набирается время сообщения
-#   в ui_t установлено поле со временем, а во втором просто поле для текста
-#   это было сделано, чтобы проверить что эффективнее использовать
-
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QIntValidator
@@ -61,7 +57,6 @@ class Notifier(QtWidgets.QMainWindow):
 
     # Функция проверки времени и вывода сообщения
     def timer_loop(self, time_obj, input_message):
-        application.hide()
         current_time = time.strftime("%H:%M:%S")
         print(current_time)
         if current_time == str(time_obj.time()):  # совпало - выводим уведомление
@@ -90,6 +85,7 @@ class Notifier(QtWidgets.QMainWindow):
             # Подключаем таймер
             self.timer = QTimer()
             self.timer.timeout.connect(lambda: self.timer_loop(time_obj, input_message))
+            application.hide()
             self.timer.start(1000)
         except:
             QMessageBox.critical(self, "Error ", "Вводить только числа от 0 до 23 для часов, и от 0 до 59 для минут", QMessageBox.Ok)
